@@ -56,6 +56,19 @@ public class PlayerController : MonoBehaviour
         {
             HandleMovement(leftAxis);
         }
+
+        if (_inputData._leftController.TryGetFeatureValue(CommonUsages.trigger, out var trigger))
+        {
+            switch (trigger)
+            {
+                case > 0.3f:
+                    StartShooting();
+                    break;
+                case < 0.3f:
+                    StopShooting();
+                    break;
+            }
+        }
     }
 
 
@@ -93,7 +106,6 @@ public class PlayerController : MonoBehaviour
     private void StopShooting()
     {
         _isShooting = false;
-    
         if (_shootingCoroutine != null)
         {
             StopCoroutine(_shootingCoroutine);
@@ -115,13 +127,6 @@ public class PlayerController : MonoBehaviour
         pool.AskForObject(shootPos);
     }
 
-    private void ShootMissile()
-    {
-        if (missileAmount > 0)
-        {
-            missileAmount--;
-        }
-    }
 
     public void ReceiveDamage(float damage)
     {
