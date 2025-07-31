@@ -1,9 +1,15 @@
 using System;
 using System.Collections;
+using System.Collections.Generic;
+using JetBrains.Annotations;
 using UnityEngine;
+using UnityEngine.XR;
+using TMPro;
 
 public class PlayerController : MonoBehaviour
 {
+    private InputData _inputData;
+    
     [SerializeField] public float shieldHp;
     [SerializeField] public float shieldRecoveryMulti;
     [SerializeField] public float maxHp;
@@ -40,35 +46,23 @@ public class PlayerController : MonoBehaviour
     
     private void Awake()
     {
+        _inputData = GetComponent<InputData>();
         _controller = GetComponent<CharacterController>();
     }
 
     private void Update()
     {
-        HandleMovement();
-        RotateTowardsMouse(); 
-        
-        if (Input.GetMouseButtonDown(0))
+        if (_inputData._leftController.TryGetFeatureValue(CommonUsages.primary2DAxis, out var leftAxis))
         {
-            StartShooting();
-            shootParticleSystem.Play();
-        }
-        if (Input.GetMouseButtonUp(0))
-        {
-            StopShooting();
-            shootParticleSystem.Stop();
-        }
-        if (Input.GetMouseButtonDown(2))
-        {
-            ShootMissile();
+            HandleMovement(leftAxis);
         }
     }
 
 
-    private void HandleMovement()
+    private void HandleMovement(Vector2 leftAxis)
     {
-        float horizontal = Input.GetAxisRaw("Horizontal");
-        float vertical = Input.GetAxisRaw("Vertical");
+        float horizontal = leftAxis.x;
+        float vertical = leftAxis.y;
 
         Vector3 moveDirection = (Vector3.right * horizontal + Vector3.forward * vertical).normalized;
 
@@ -87,23 +81,6 @@ public class PlayerController : MonoBehaviour
         _controller.Move(moveDirection * (speed * Time.deltaTime));
     }
     
-    private void RotateTowardsMouse()
-    {
-        Ray ray = mainCamera.ScreenPointToRay(Input.mousePosition);
-        Plane plane = new Plane(Vector3.up, transform.position);
-
-        if (plane.Raycast(ray, out float distance))
-        {
-            Vector3 targetPoint = ray.GetPoint(distance);
-            Vector3 direction = (targetPoint - transform.position).normalized;
-            direction.y = 0;
-
-            Quaternion targetRotation = Quaternion.LookRotation(direction);
-            transform.rotation = Quaternion.Slerp(transform.rotation, targetRotation, Time.deltaTime * 10f);
-        }
-    }
-    
-
     private void StartShooting()
     {
         if (!_isShooting)
