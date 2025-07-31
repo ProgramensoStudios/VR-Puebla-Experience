@@ -52,17 +52,14 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
-        if (_inputData._leftController.TryGetFeatureValue(CommonUsages.primary2DAxis, out var leftAxis))
-        {
-            HandleMovement(leftAxis);
-        }
 
-        if (_inputData._leftController.TryGetFeatureValue(CommonUsages.trigger, out var trigger))
+        if (_inputData._rightController.TryGetFeatureValue(CommonUsages.trigger, out var trigger))
         {
             switch (trigger)
             {
                 case > 0.3f:
                     StartShooting();
+                    Debug.Log("Pollo Frito");
                     break;
                 case < 0.3f:
                     StopShooting();
@@ -72,27 +69,7 @@ public class PlayerController : MonoBehaviour
     }
 
 
-    private void HandleMovement(Vector2 leftAxis)
-    {
-        float horizontal = leftAxis.x;
-        float vertical = leftAxis.y;
-
-        Vector3 moveDirection = (Vector3.right * horizontal + Vector3.forward * vertical).normalized;
-
-        
-        if (_controller.isGrounded)
-        {
-            verticalVelocity = -2f;
-        }
-        else
-        {
-            verticalVelocity += gravity * Time.deltaTime; 
-        }
-        
-        moveDirection.y = verticalVelocity;
-
-        _controller.Move(moveDirection * (speed * Time.deltaTime));
-    }
+   
     
     private void StartShooting()
     {
