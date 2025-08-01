@@ -67,9 +67,6 @@ public class PlayerController : MonoBehaviour
             }
         }
     }
-
-
-   
     
     private void StartShooting()
     {
@@ -95,6 +92,7 @@ public class PlayerController : MonoBehaviour
         while (_isShooting)
         {
             Shoot(); 
+            
             yield return new WaitForSeconds(fireRate);
         }
     }
@@ -102,6 +100,7 @@ public class PlayerController : MonoBehaviour
     private void Shoot()
     {
         pool.AskForObject(shootPos);
+        shootParticleSystem.Play();
     }
 
 
