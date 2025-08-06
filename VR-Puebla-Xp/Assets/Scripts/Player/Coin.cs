@@ -8,6 +8,8 @@ public class Coin : MonoBehaviour
     [SerializeField] private float floatFrequency = 2f;
     [SerializeField] private float rotateSpeed = 90f;
 
+    [SerializeField] private bool isCoin;
+
     [Header("Detection Settings")]
     [SerializeField] private string playerLayerName = "Player";
 
@@ -38,6 +40,7 @@ public class Coin : MonoBehaviour
     {
         if (other.gameObject.layer == LayerMask.NameToLayer(playerLayerName))
         {
+            if (!isCoin) return;
             Collect();
         }
     }

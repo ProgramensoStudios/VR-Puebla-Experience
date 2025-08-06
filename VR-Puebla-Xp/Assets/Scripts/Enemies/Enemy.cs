@@ -9,7 +9,7 @@ public class Enemy : MonoBehaviour
     [SerializeField] private FollowPointsManager patrolManager;
 
     [Header("Disparo")]
-    [SerializeField] private float shootInterval = 0.3f;
+    [SerializeField] private float shootInterval = .8f;
     [SerializeField] private float detectionRange = 20f;
     [SerializeField] private LayerMask playerLayer;
 

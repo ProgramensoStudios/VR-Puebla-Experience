@@ -28,6 +28,8 @@ public class BulletEnem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
+        
+        
         if (other.TryGetComponent(out PlayerController health))
         {
             health.ReceiveDamage(damage);
