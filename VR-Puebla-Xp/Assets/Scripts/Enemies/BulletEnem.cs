@@ -1,13 +1,16 @@
+using System;
 using UnityEngine;
 
 public class BulletEnem : MonoBehaviour
 {
     [SerializeField] private float speed = 20f;
-    [SerializeField] private int damage = 10;
+    [SerializeField] private float damage;
     [SerializeField] private float lifeTime = 3f;
+    
 
     private Vector3 _direction;
     private float _lifeTimer;
+    
 
     public void SetDirection(Vector3 dir)
     {
@@ -28,7 +31,6 @@ public class BulletEnem : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        
         
         if (other.TryGetComponent(out PlayerController health))
         {

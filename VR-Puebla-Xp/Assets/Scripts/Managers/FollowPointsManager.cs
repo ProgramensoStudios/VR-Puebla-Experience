@@ -19,6 +19,8 @@ public class FollowPointsManager : MonoBehaviour
         Zone3,
         Zone4,
         Zone5,
-        Zone6
+        Zone6,
+        Zone7,
+        Zone8
     }
 }
