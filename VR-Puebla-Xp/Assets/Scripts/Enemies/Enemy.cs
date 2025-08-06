@@ -25,10 +25,10 @@ public class Enemy : MonoBehaviour
     [SerializeField] private FollowPointsManager.Zones zonaAsignada;
     
     
-    [SerializeField] private ScoreManager scoreManager;
+    //[SerializeField] private ScoreManager scoreManager;
     [SerializeField] private GameObject coinPrefab;
-    [SerializeField] private int scoreValue = 100;
-    [SerializeField, Range(0f, 1f)] private float coinDropChance = 0.2f;
+    //[SerializeField] private int scoreValue = 100;
+    [SerializeField, Range(0f, 1f)] private float coinDropChance = 1;
 
     [SerializeField] private EnemyCountManager enemyCountManager;
     
@@ -155,10 +155,10 @@ public class Enemy : MonoBehaviour
             Instantiate(coinPrefab, transform.position, Quaternion.identity);
         }
 
-        if (scoreManager != null)
-        {
-            scoreManager.AddScore(scoreValue);
-        }
+        //if (scoreManager != null)
+        //{
+        //    scoreManager.AddScore(scoreValue);
+        //}
 
         OnDeath?.Invoke(this);
 

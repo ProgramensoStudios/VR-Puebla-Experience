@@ -59,7 +59,6 @@ public class PlayerController : MonoBehaviour
             {
                 case > 0.3f:
                     StartShooting();
-                    Debug.Log("Pollo Frito");
                     break;
                 case < 0.3f:
                     StopShooting();
@@ -91,8 +90,9 @@ public class PlayerController : MonoBehaviour
     {
         while (_isShooting)
         {
-            Shoot(); 
-            
+            Shoot();
+            shootParticleSystem.Play();
+            Debug.Log(shootParticleSystem);
             yield return new WaitForSeconds(fireRate);
         }
     }
@@ -100,7 +100,6 @@ public class PlayerController : MonoBehaviour
     private void Shoot()
     {
         pool.AskForObject(shootPos);
-        shootParticleSystem.Play();
     }
 
 
