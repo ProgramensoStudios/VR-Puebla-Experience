@@ -76,7 +76,7 @@ Material:
     - _BlingPower: {r: 0.51, g: 0.5, b: 0, a: 0}
     - _FresnelColor: {r: 1.1470782, g: 7.98029, b: 10.432951, a: 1}
     - _ScanLineSpeed: {r: 0, g: -0.05, b: 0, a: 0}
-    - _ScanLinesTiling: {r: 0, g: 1, b: 0, a: 0}
+    - _ScanLinesTiling: {r: 0, g: 6.97, b: 0, a: 0}
   m_BuildTextureStacks: []
   m_AllowLocking: 1
 --- !u!114 &4315861611889078424

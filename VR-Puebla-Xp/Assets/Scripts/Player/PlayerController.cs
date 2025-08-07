@@ -25,6 +25,7 @@ public class PlayerController : MonoBehaviour
     private Coroutine _shieldDelayCoroutine;
     private bool _canRegenerateShield = true;
     [SerializeField] private AudioSource bulletSfx;
+    [SerializeField] private EditableTimer timer;
     
     public event Action<float> OnHpChanged;
     public event Action<float, bool> OnShieldChanged;
@@ -124,6 +125,7 @@ public class PlayerController : MonoBehaviour
     private void Die()
     {
         Debug.Log("DED");
-        gameObject.SetActive(false);
+        timer.EndTime();
+        EditableTimer.onTimerEnd?.Invoke();
     }
 }
