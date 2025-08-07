@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -8,7 +9,7 @@ public class InputData : MonoBehaviour
     public InputDevice _rightController;
     public InputDevice _leftController;
     public InputDevice _HMD;
-
+    
 
     void Update()
     {

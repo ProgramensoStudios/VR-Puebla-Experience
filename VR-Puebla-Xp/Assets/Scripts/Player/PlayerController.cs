@@ -17,7 +17,6 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private PoolingSystem pool;
     [SerializeField] private Transform shootPos;
     [SerializeField] private ParticleSystem shootParticleSystem;
-    
     private Vector3 _moveInput;
     private Coroutine _shootingCoroutine;
     [SerializeField] private float fireRate = 0.2f;
@@ -25,23 +24,37 @@ public class PlayerController : MonoBehaviour
     private Coroutine _shieldRegenCoroutine;
     private Coroutine _shieldDelayCoroutine;
     private bool _canRegenerateShield = true;
-
     [SerializeField] private AudioSource bulletSfx;
-    
     
     public event Action<float> OnHpChanged;
     public event Action<float, bool> OnShieldChanged;
+    
+    [SerializeField] private bool canReceiveData = true;
+
+    private void OnEnable()
+    {
+        EditableTimer.onTimerEnd += EndGame;
+    }
+
+    private void OnDisable()
+    {
+        EditableTimer.onTimerEnd -= EndGame;
+    }
+
+    private void EndGame()
+    {
+        canReceiveData = false;
+    }
     
     
     private void Awake()
     {
         _inputData = GetComponent<InputData>();
-       
     }
 
     private void Update()
     {
-
+        if (!canReceiveData) return;
         if (_inputData._rightController.TryGetFeatureValue(CommonUsages.trigger, out var trigger))
         {
             switch (trigger)

@@ -46,7 +46,7 @@ public class EnemyCountManager : MonoBehaviour
         if (enemies.Count == 0)
         {
             Debug.Log("Wave complete!");
-            waveManager.WaveEnded();
+            //waveManager.WaveEnded();
         }
     }
 }

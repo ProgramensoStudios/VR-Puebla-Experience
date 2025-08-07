@@ -11,14 +11,16 @@ public class PlayerUIController : MonoBehaviour
     
     //[SerializeField] private TextMeshProUGUI scoreText;
     //[SerializeField] private ScoreManager scoreManager;
-    //[SerializeField] private TextMeshProUGUI coinText;
-    //[SerializeField] private CurrencyManager currencyManager;
+    [SerializeField] private TextMeshProUGUI coinText;
+    [SerializeField] private TextMeshProUGUI endText;
+    [SerializeField] private CurrencyManager currencyManager;
 
     private void Start()
     {
         maxHp = player.hp;
 
         player.OnHpChanged += UpdateHpBar;
+        currencyManager.OnCoinsChanged += UpdateCoinUI;
 
         UpdateHpBar(player.hp);
         
@@ -42,8 +44,9 @@ public class PlayerUIController : MonoBehaviour
     }
     
     private void UpdateCoinUI(int coins)
-    {
-        //coinText.text = coins.ToString();
+    { 
+        coinText.text = coins.ToString();
+        endText.text = coins.ToString();
     }
     private void UpdateScoreUI(int score)
     {

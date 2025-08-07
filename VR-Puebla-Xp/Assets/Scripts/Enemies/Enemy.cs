@@ -4,19 +4,20 @@ using UnityEngine.AI;
 
 public class Enemy : MonoBehaviour
 {
-    [Header("Referencias")]
-    [SerializeField] private Transform shootPoint;
+    [Header("Referencias")] [SerializeField]
+    private Transform shootPoint;
+
     [SerializeField] private PoolingSystem poolingSystem;
     [SerializeField] private FollowPointsManager patrolManager;
     [SerializeField] private AudioSource bulletSfx;
+    [SerializeField] private AudioSource boomSfx;
 
-    [Header("Disparo")]
-    [SerializeField] private float shootInterval = .8f;
+    [Header("Disparo")] [SerializeField] private float shootInterval = .8f;
     [SerializeField] private float detectionRange = 20f;
     [SerializeField] private LayerMask playerLayer;
 
-    [Header("Vida")]
-    [SerializeField] private int maxHealth = 100;
+    [Header("Vida")] [SerializeField] private int maxHealth = 100;
+    [SerializeField] private ParticleSystem vfx;
 
     [SerializeField] private Transform player;
     [SerializeField] private int sumYCoinTrans;
@@ -26,6 +27,8 @@ public class Enemy : MonoBehaviour
 
     [SerializeField] private EnemyCountManager enemyCountManager;
 
+    [SerializeField] private bool _canMove = true;
+
     public event System.Action<Enemy> OnDeath;
 
     // --- INTERNAS ---
@@ -34,6 +37,7 @@ public class Enemy : MonoBehaviour
     private float _shootTimer;
     private Transform _currentTarget;
     private Transform _patrolTarget;
+    private bool _isDead = false;
 
     // Alerta por daño
     private Vector3 _investigatePosition;
@@ -46,6 +50,7 @@ public class Enemy : MonoBehaviour
         _agent = GetComponent<NavMeshAgent>();
         _currentHealth = maxHealth;
         enemyCountManager = FindAnyObjectByType<EnemyCountManager>();
+        EditableTimer.onTimerEnd += Stop;
     }
 
     private void Start()
@@ -55,6 +60,12 @@ public class Enemy : MonoBehaviour
 
     private void Update()
     {
+        if (!_canMove)
+        {
+            _agent.isStopped = true;
+            return;
+        }
+        
         _shootTimer += Time.deltaTime;
 
         if (_currentTarget == null)
@@ -150,13 +161,20 @@ public class Enemy : MonoBehaviour
             Vector3 dir = (target.position - shootPoint.position).normalized;
             bulletScript.SetDirection(dir);
         }
+
+        Debug.Log("BANG");
         bulletSfx.Play();
+    }
+
+    [ContextMenu("Dano")]
+    public void TakeDamageDebug()
+    {
+        TakeDamage(1);
     }
 
     public void TakeDamage(int amount)
     {
         _currentHealth -= amount;
-
         // Activamos modo investigación
         _investigatePosition = player.position; // Guardamos de dónde vino el ataque
         _isInvestigating = true;
@@ -165,7 +183,10 @@ public class Enemy : MonoBehaviour
 
         if (_currentHealth <= 0)
         {
+            if (_isDead) return;
+            _isDead = true;
             Die();
+
         }
     }
 
@@ -199,9 +220,19 @@ public class Enemy : MonoBehaviour
 
     private void Die()
     {
-        Instantiate(coinPrefab, new Vector3(transform.position.x, transform.position.y + sumYCoinTrans, transform.position.z), Quaternion.identity);
-
+        Debug.Log("MUERTE");
+        bulletSfx.Play();
+        //bulletSfx.pitch = 1;
+        Instantiate(coinPrefab, new Vector3(transform.position.x, transform.position.y + sumYCoinTrans, transform.position.z),Quaternion.identity);
+        boomSfx.Play();
         OnDeath?.Invoke(this);
+        Instantiate(vfx, new Vector3(transform.position.x, transform.position.y + sumYCoinTrans, transform.position.z), Quaternion.identity);
+        StartCoroutine(SoundDelay());
+    }
+
+    IEnumerator SoundDelay()
+    {
+        yield return new WaitForSeconds(0.6f);
         gameObject.SetActive(false);
     }
 
@@ -209,5 +240,10 @@ public class Enemy : MonoBehaviour
     {
         Gizmos.color = Color.red;
         Gizmos.DrawWireSphere(transform.position, detectionRange);
+    }
+
+    private void Stop()
+    {
+    _canMove = false;
     }
 }
